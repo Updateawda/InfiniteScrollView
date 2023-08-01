@@ -63,7 +63,7 @@ public class InfiniteScrollView<T> where T : GridPartItem, new()
     /// <summary>
     /// 在mask初始宽高下,一行能放item最多数量,一列放item最多数量
     /// </summary>
-    private int maxItemNumWide, maxItemNumHigh;
+    public int maxItemNumWide, maxItemNumHigh;
     #region Init
 
     /// <summary>
@@ -93,14 +93,14 @@ public class InfiniteScrollView<T> where T : GridPartItem, new()
             content.sizeDelta = new Vector2
              (
                  layout.padding.left + layout.padding.right + (int)Math.Ceiling((float)totalCount / maxItemNumHigh) * (layoutCellSizeXAndSpacingX) - layout.spacing.x,
-                 content.rect.height
+                 layoutCellSizeYAndSpacingY * maxItemNumHigh - layout.spacing.y + layout.padding.top - layout.padding.bottom
              ); ;
         }
         else if (scrollType == ScrollType.Vertical)
         {
             content.sizeDelta = new Vector2
                (
-                   content.rect.width,
+                   layoutCellSizeXAndSpacingX* maxItemNumWide-layout.spacing.x+layout.padding.left- layout.padding.right,
                    layout.padding.top + layout.padding.bottom + (int)Math.Ceiling((float)totalCount / maxItemNumWide) * layoutCellSizeYAndSpacingY
                ); ;
         }
@@ -290,7 +290,6 @@ public class InfiniteScrollView<T> where T : GridPartItem, new()
     public InfiniteScrollView(GameObject ga, GameObject itemPrefab)
     {
         this.itemPrefab = itemPrefab;
-        Init(ga);
     }
     private int layoutCellSizeYAndSpacingY, layoutCellSizeXAndSpacingX;
     /// <summary>
@@ -306,8 +305,8 @@ public class InfiniteScrollView<T> where T : GridPartItem, new()
         scrollRect.onValueChanged.AddListener((Vector2 v) => OnScroll(v));
         layoutCellSizeYAndSpacingY = (int)layout.cellSize.y + (int)layout.spacing.y;
         layoutCellSizeXAndSpacingX = (int)layout.cellSize.x + (int)layout.spacing.x;
-        maxItemNumWide = (int)((maskTranV2.x - layout.padding.left - layout.padding.top) / layoutCellSizeXAndSpacingX);
-        maxItemNumHigh = (int)((maskTranV2.y - layout.padding.right - layout.padding.bottom) / layoutCellSizeYAndSpacingY);
+        /*maxItemNumWide = (int)((maskTranV2.x - layout.padding.left - layout.padding.top+ (int)layout.spacing.x)) / layoutCellSizeXAndSpacingX;
+        maxItemNumHigh = (int)((maskTranV2.y - layout.padding.right - layout.padding.bottom + (int)layout.spacing.y)) / layoutCellSizeYAndSpacingY;*/
 
         scrollType = scrollRect.horizontal ? ScrollType.Horizontal : ScrollType.Vertical;
         //设置布局
